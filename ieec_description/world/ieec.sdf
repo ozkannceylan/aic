@@ -5,7 +5,7 @@
     <scene>
       <ambient>0.4 0.4 0.4</ambient>
       <grid>false</grid>
-      <sky></sky>
+      <!-- <sky></sky> -->
     </scene>
 
     <gui fullscreen="0">
@@ -367,6 +367,20 @@
       </uri>
       <name>table1</name>
       <pose>0 0 0 0 0 0.0</pose>
+    </include>
+
+    <include>
+      <uri>model://SFP Module</uri>
+      <name>sfp_module</name>
+      <pose>0.5 0 1.06 0 0 0</pose>
+      <static>false</static>
+    </include>
+
+    <include>
+      <uri>model://SFP Plug</uri>
+      <name>sfp_plug</name>
+      <pose>0.5 0.1 1.06 0 0 0</pose>
+      <static>false</static>
     </include>
 
   </world>
