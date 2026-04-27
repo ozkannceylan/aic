@@ -231,7 +231,20 @@ class TrialOrchestrator(Policy):
             return
 
         if state is OrchestratorState.INSERTING:
-            result_ins: InsertionResult = self._insertion.run(obs)
+            # ClassicalInsertion owns its internal phase loop. We pass it the
+            # raw-msg-getter wrapped in _pull_fresh_observation so the
+            # SafetyWatchdog's compensated-wrench feed (which reads
+            # self._trial.last_observation) stays current while we run.
+            # task_one_hot is latched at trial start (§3.5).
+            result_ins: InsertionResult = self._insertion.run(
+                seed_observation=obs,
+                task_one_hot=self._trial.task_one_hot,
+                get_observation=lambda: self._pull_fresh_observation(get_observation),
+                move_robot=move_robot,
+                set_pose_target=self.set_pose_target,
+                abort_check=lambda: self._trial.abort_flag,
+                send_feedback=send_feedback,
+            )
             if self._trial.abort_flag:
                 self._trial.state = OrchestratorState.ABORTED
                 return
